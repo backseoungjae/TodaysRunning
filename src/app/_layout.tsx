@@ -5,7 +5,12 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="running" />
+        <Stack.Screen name="runResult" />
+        <Stack.Screen name="activity/[runId]" />
+      </Stack>
     </>
   );
 }

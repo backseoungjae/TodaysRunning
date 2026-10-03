@@ -1,0 +1,81 @@
+# Run against an installed, idle Preview build; this creates a short QA run. Requires Maestro and a GPS-capable test device.
+# Android location mocking requires API 31+. This flow preserves existing SQLite data.
+# OS permission prompts and screen-lock behavior still require manual device QA.
+appId: com.bsj.todaysrunning
+---
+- launchApp:
+    clearState: false
+    permissions:
+      location: allow
+- setLocation:
+    latitude: 37.5
+    longitude: 127.0
+- extendedWaitUntil:
+    visible:
+      id: home-training-progress
+    timeout: 30000
+- tapOn: 러닝 시작
+- assertVisible: 러닝 설정
+- tapOn: START
+- extendedWaitUntil:
+    visible:
+      id: run-duration
+    timeout: 30000
+- extendedWaitUntil:
+    visible: 위치를 기록하고 있어요.
+    timeout: 30000
+- tapOn: 지도 보기
+- assertVisible:
+    id: run-map
+- travel:
+    points:
+      - "37.5000, 127.0000"
+      - "37.5002, 127.0000"
+      - "37.5004, 127.0000"
+    speed: 2
+- tapOn: 현재 위치로
+- tapOn: 통계 보기
+- assertVisible:
+    id: run-distance
+- tapOn: 일시정지
+- extendedWaitUntil:
+    visible: 계속 달리기
+    timeout: 10000
+- tapOn: 계속 달리기
+- extendedWaitUntil:
+    visible: 일시정지
+    timeout: 10000
+- tapOn: 일시정지
+- tapOn: 러닝 종료
+- extendedWaitUntil:
+    visible:
+      id: result-distance
+    timeout: 10000
+- assertVisible:
+    id: result-duration
+- assertVisible:
+    id: result-pace
+- tapOn: 홈으로 이동
+- tapOn: 활동
+- scrollUntilVisible:
+    element:
+      id: "activity-[a-f0-9]{32}"
+      index: 0
+    direction: DOWN
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: "activity-[a-f0-9]{32}"
+      index: 0
+    timeout: 10000
+- tapOn:
+    id: "activity-[a-f0-9]{32}"
+    index: 0
+- assertVisible:
+    id: activity-detail-distance
+- assertVisible:
+    id: activity-detail-duration
+- assertVisible:
+    id: activity-detail-pace
+- assertNotVisible: 설정
+- tapOn: 활동 기록으로 돌아가기
